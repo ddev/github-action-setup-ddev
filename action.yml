@@ -1,0 +1,10 @@
+# action.yml
+name: 'Setup ddev'
+description: 'Set up your GitHub Actions workflow with ddev '
+author: 'Jonas Eberle'
+runs:
+  using: 'node12'
+  main: 'lib/main.js'
+branding:
+  icon: cpu
+  color: yellow
