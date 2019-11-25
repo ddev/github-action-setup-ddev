@@ -1,13 +1,11 @@
 on: [push, pull_request]
 
 jobs:
-  test-setup-ddev:
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-16.04, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v1
-      - name: Setup ddev
-        id: setup-ddev
-        uses: jonaseberle/github-action-setup-ddev@master
+      - uses: jonaseberle/github-action-setup-ddev@master
