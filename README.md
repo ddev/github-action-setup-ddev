@@ -12,7 +12,7 @@ Then it starts ddev. Any additional services that you might have configured will
 
 ## Example usage
 
-Just put this your Github repo's `.github/workflows/test.yml`: 
+This is a full example that you could copy to `.github/workflows/test.yml`: 
 ```
 on: [push, pull_request]
 
