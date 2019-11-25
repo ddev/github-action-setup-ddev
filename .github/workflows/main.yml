@@ -5,13 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v1
       - name: Setup ddev
         id: setup-ddev
-        uses: jonaseberle/setup-ddev@master
-#        with:
-#          who-to-greet: 'Mona the Octocat'
-#      # Use the output from the `hello` step
-#      - name: Get the output time
-#        run: echo "The time was ${{ steps.hello.outputs.time }}"
+        uses: jonaseberle/github-action-setup-ddev@{{ github.ref }}
