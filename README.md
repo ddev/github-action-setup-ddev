@@ -1,12 +1,12 @@
 # Setup and start ddev action
 
-This action starts [drud](https://www.ddev.com/) [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
+This **Github action** starts [drud](https://www.ddev.com/) [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
 
 The idea is to reuse the same environment that you are maintaining for development anyways for automated acceptance testing, thus saving on maintaining a separate CI-configuration.
 
 ## What it does
 
-It installs all dependencies and applies a workaround for a docker-gen (which is used in ddev-router) problem in Github actions <https://github.com/jwilder/docker-gen/issues/315>.
+The action installs dependencies and applies a workaround for a docker-gen problem with Github actions ([issue](https://github.com/jwilder/docker-gen/issues/315)).
 
 Then it starts ddev. Any additional services that you might have configured will be started and any post-start hooks etc. will be run.
 
