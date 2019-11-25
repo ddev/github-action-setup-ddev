@@ -1,6 +1,6 @@
 # Setup and start ddev action
 
-This action starts [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
+This action starts [drud](https://www.ddev.com/) [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
 
 The idea is to reuse the same environment that you are maintaining for development anyways for automated acceptance testing, thus saving on maintaining a separate CI-configuration.
 
