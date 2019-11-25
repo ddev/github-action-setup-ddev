@@ -29,7 +29,7 @@ jobs:
       # example: fill database
       - run: ddev mysql < data/db.sql
       # example: install TYPO3 with helhum/typo3-console
-      - run: ddev composer typo3cms install:setup --admin-user-name=admin --admin-password=adminadmin --no-interaction
+      - run: ddev exec vendor/bin/typo3cms install:setup --admin-user-name=admin --admin-password=adminadmin --no-interaction
       # example: run something in the "web" container
       - run: ddev exec Build/runTests.sh
 ```
