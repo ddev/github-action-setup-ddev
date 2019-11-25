@@ -31,6 +31,11 @@ jobs:
       # example: run something in the "web" container
       - run: ddev exec Build/runTests.sh
 ```
+In short (for experienced Github Actioneers): 
+```
+ - uses: jonaseberle/github-action-setup-ddev@v1
+```
+
 ## Contact
 
 For **bugs** and **feature requests** use the [Github bug tracker](https://github.com/jonaseberle/github-action-setup-ddev/issues).
