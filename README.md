@@ -1,3 +1,5 @@
+[![Tests](https://github.com/jonaseberle/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/jonaseberle/github-action-setup-ddev/actions)
+
 # Setup and start ddev action
 
 This **Github action** starts [drud](https://www.ddev.com/) [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
