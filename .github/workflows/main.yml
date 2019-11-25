@@ -1,4 +1,4 @@
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test-setup-ddev:
@@ -7,4 +7,4 @@ jobs:
       - uses: actions/checkout@v1
       - name: Setup ddev
         id: setup-ddev
-        uses: jonaseberle/github-action-setup-ddev@{{ github.ref }}
+        uses: jonaseberle/github-action-setup-ddev@master
