@@ -2,7 +2,10 @@ on: [push, pull_request]
 
 jobs:
   test-setup-ddev:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v1
       - name: Setup ddev
