@@ -31,42 +31,42 @@ async function run() {
         await execShellCommand('echo \'dir: ' + __dirname + '\'');
         
         let cmd = 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -';
-        console.log('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'sudo apt-get update'
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce libnss3-tools'
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         core.addPath('/home/linuxbrew/.linuxbrew/bin');
         cmd = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'brew tap drud/ddev';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'brew install ddev docker-compose mkcert nss';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'mkcert -install';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'ddev config global --instrumentation-opt-in=false';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'ddev config global --omit-containers=dba,ddev-ssh-agent';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
         let _nginxTmplPath = path.join(__dirname, '..', '.ddev', 'patches', 'ddev-router', 'nginx.tmpl');
         cmd = 'ddev start || ( ' +
             '    docker cp ' + _nginxTmplPath + ' ddev-router:/app/nginx.tmpl ' +
             '    && ddev start ' +
             ')';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log(cmd);
         await execShellCommand(cmd);
     } catch (error) {
         core.setFailed(error.message);
