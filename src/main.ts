@@ -31,7 +31,7 @@ async function run() {
         await execShellCommand('echo \'dir: ' + __dirname + '\'');
         
         let cmd = 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -';
-        await execShellCommand('echo \'' + cmd + '\'');
+        console.log('echo \'' + cmd + '\'');
         await execShellCommand(cmd);
         cmd = 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"';
         await execShellCommand('echo \'' + cmd + '\'');
