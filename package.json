@@ -19,7 +19,7 @@
   "author": "Jonas Eberle",
   "license": "GPL v3",
   "dependencies": {
-    "@actions/core": "^1.2.4",
+    "@actions/core": "^1.2.6",
     "@types/node": "^12.12.47",
     "typescript": "^3.9.6"
   }
