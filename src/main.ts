@@ -43,7 +43,7 @@ async function run() {
         console.log(cmd);
         await execShellCommand(cmd);
         core.addPath('/home/linuxbrew/.linuxbrew/bin');
-        cmd = 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"';
+        cmd = '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"';
         console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'brew tap drud/ddev';
