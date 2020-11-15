@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import {spawn} from 'child_process'
 import * as path from 'path';
+
 /**
  * Executes a shell command and return it as a Promise.
  */
@@ -29,7 +30,7 @@ function execShellCommand(cmd: string): Promise<string> {
 async function run() {
     try {
         await execShellCommand('echo \'dir: ' + __dirname + '\'');
-        
+
         let cmd = 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -';
         console.log(cmd);
         await execShellCommand(cmd);
