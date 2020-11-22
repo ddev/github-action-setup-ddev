@@ -1,3 +1,4 @@
+## jonaseberle edition
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
 {{ define "upstream" }}
@@ -156,6 +157,7 @@ server {
 {{/* upstream {{ $upstream_name }} { */}}
 
 {{ range $container := $containers }}
+    ### Looking at {{ $container.Name }}
     {{/* HTTP_EXPOSE replaces the VIRTUAL_PORT var originally provided by jwilder/nginx-proxy. */}}
     {{/* HTTP_EXPOSE provides comma-separated ports to serve for container. Ports can be defined as hostPort:containerPort */}}
     {{ $ports := coalesce $container.Env.HTTP_EXPOSE "80" }}
@@ -174,7 +176,7 @@ server {
     {{ range $containerNetwork := $container.Networks }}
         ## checking containerNetwork="{{ $containerNetwork.Name }}"
         {{ if (ne $containerNetwork.Name "ingress") }}
-            ## Can be connect with "{{ $containerNetwork.Name }}" network
+            ## Can be connected with "{{ $containerNetwork.Name }}" network
 
             {{/* If only 1 port exposed, use that */}}
             {{ if eq $addrLen 1 }}
