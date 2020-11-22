@@ -1,6 +1,5 @@
-### finding ID= {{ .Docker.CurrentContainerID }}
+## jonaseberle edition
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
-### CurrentContainer= {{ $CurrentContainer }}
 
 {{ define "upstream" }}
 	{{ if .Address }}
@@ -39,9 +38,6 @@ map $http_upgrade $proxy_connection {
   default upgrade;
   '' close;
 }
-
-# Apply fix for very long server names
-server_names_hash_bucket_size 128;
 
 # Default dhparam
 # ssl_dhparam /etc/nginx/dhparam/dhparam.pem;
@@ -91,11 +87,12 @@ proxy_set_header Proxy "";
 {{ $default_cert := trimSuffix ".crt" $default_cert }}
 {{ $default_cert := trimSuffix ".key" $default_cert }}
 server {
-	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	listen 80;
-	{{ if $enable_ipv6 }}
-	listen [::]:80;
-	{{ end }}
+	server_name _; # Catch-all for any server_name that is not matched in the config
+
+    # Listen on all configured http ports + 80 (HTTPS_EXPOSE)
+    # So that we can redirect any server_name that is invalid
+
+	include /tmp/http_ports.conf;
 	access_log /var/log/nginx/access.log vhost;
 
     error_page 503 @noupstream;
@@ -115,36 +112,40 @@ server {
     }
 }
 
-{{ if exists (printf "/etc/nginx/certs/%s.crt" $default_cert) }}
-server {
-	server_name _; # This is just an invalid value which will never trigger on a real hostname.
-	listen 443 ssl http2;
-	{{ if $enable_ipv6 }}
-	listen [::]:443 ssl http2;
-	{{ end }}
-	access_log /var/log/nginx/access.log vhost;
+ {{ if exists (printf "/etc/nginx/certs/%s.crt" $default_cert) }}
+ server {
+ 	server_name _; # Catch-all for any server_name that is not matched in the config
 
-    error_page 503 @noupstream;
-    location @noupstream {
-        rewrite ^(.*)$ /503.html break;
-        root /app;
-    }
+ 	# Listen on all configured https ports + 443 (HTTPS_EXPOSE)
+ 	# So that we can redirect any server_name that is invalid
+	include /tmp/https_ports.conf;
 
-    location / {
-        return 503;
-    }
-
-    ## provide a health check endpoint
-    location = /healthcheck {
-        access_log off;
-        return 200;
-    }
-
-	ssl_session_tickets off;
-    ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $default_cert) }};
-    ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $default_cert) }};
-}
-{{ end }}
+ 	{{ if $enable_ipv6 }}
+ 	listen [::]:443 ssl http2;
+ 	{{ end }}
+ 	access_log /var/log/nginx/access.log vhost;
+ 
+     error_page 503 @noupstream;
+     location @noupstream {
+         rewrite ^(.*)$ /503.html break;
+         root /app;
+     }
+ 
+     location / {
+         return 503;
+     }
+ 
+     ## provide a health check endpoint
+     location = /healthcheck {
+         access_log off;
+         return 200;
+     }
+ 
+ 	ssl_session_tickets off;
+     ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $default_cert) }};
+     ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $default_cert) }};
+ }
+ {{ end }}
 
 {{ range $host, $containers := groupByMulti $ "Env.VIRTUAL_HOST" "," }}
 
@@ -156,9 +157,8 @@ server {
 {{/* upstream {{ $upstream_name }} { */}}
 
 {{ range $container := $containers }}
-    ### we are at container= {{ $container.Name }}
-
-    {{/* This replaces the VIRTUAL_PORT var originally provided by jwilder/nginx-proxy. */}}
+    ### Looking at {{ $container.Name }}
+    {{/* HTTP_EXPOSE replaces the VIRTUAL_PORT var originally provided by jwilder/nginx-proxy. */}}
     {{/* HTTP_EXPOSE provides comma-separated ports to serve for container. Ports can be defined as hostPort:containerPort */}}
     {{ $ports := coalesce $container.Env.HTTP_EXPOSE "80" }}
     {{ $ports := split $ports "," }}
@@ -169,13 +169,14 @@ server {
 
     # {{ $host }}
     upstream {{ $upstream_name }}-{{ $upstream_port }} {
-
+    keepalive 100;
 	{{ $addrLen := len $container.Addresses }}
 
+    # jonaseberle/github-action-setup-ddev version (patched)
     {{ range $containerNetwork := $container.Networks }}
         ## checking containerNetwork="{{ $containerNetwork.Name }}"
         {{ if (ne $containerNetwork.Name "ingress") }}
-            ## Can be connect with "{{ $containerNetwork.Name }}" network
+            ## Can be connected with "{{ $containerNetwork.Name }}" network
 
             {{/* If only 1 port exposed, use that */}}
             {{ if eq $addrLen 1 }}
@@ -209,7 +210,7 @@ server {
 {{/* Get the VIRTUAL_ROOT By containers w/ use fastcgi root */}}
 {{ $vhost_root := or (first (groupByKeys $containers "Env.VIRTUAL_ROOT")) "/var/www/public" }}
 
-# Use a single master.crt/master.key
+# Default to a single master.crt/master.key
 {{ $cert := "master" }}
 
 {{ range $container := whereExist $containers "Env.HTTP_EXPOSE" }}
@@ -266,6 +267,7 @@ server {
                 proxy_buffers   4 256k;
                 proxy_busy_buffers_size   256k;
                 proxy_read_timeout 10m;
+                proxy_http_version 1.1;
                 proxy_pass {{ trim $proto }}://{{ trim $upstream_name }}-{{ trim $upstream_port }};
                 {{ end }}
                 error_page 502 @brokenupstream;
@@ -320,16 +322,21 @@ server {
             deny all;
             {{ end }}
 
-            ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-            ssl_ciphers 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:!DSS';
-
             ssl_prefer_server_ciphers on;
             ssl_session_timeout 5m;
             ssl_session_cache shared:SSL:50m;
             ssl_session_tickets off;
 
+            {{ if (exists (printf "/mnt/ddev-global-cache/custom_certs/%s.crt" $host)) }}
+            ssl_certificate /mnt/ddev-global-cache/custom_certs/{{ (printf "%s.crt" $host) }};
+            ssl_certificate_key /mnt/ddev-global-cache/custom_certs/{{ (printf "%s.key" $host) }};
+            {{ else if (exists (printf "/etc/letsencrypt/live/%s/fullchain.pem" $host)) }}
+            ssl_certificate /etc/letsencrypt/live/{{ $host }}/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/{{ $host }}/privkey.pem;
+            {{ else }}
             ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
             ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
+            {{ end }}
 
             {{ if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
             ssl_dhparam {{ printf "/etc/nginx/certs/%s.dhparam.pem" $cert }};
@@ -364,6 +371,7 @@ server {
                 proxy_buffers   4 256k;
                 proxy_busy_buffers_size   256k;
                 proxy_read_timeout 10m;
+                proxy_http_version 1.1;
                 proxy_pass {{ trim $proto }}://{{ trim $upstream_name }}-{{ trim $upstream_port }};
                 {{ end }}
                 error_page 502 @brokenupstream;

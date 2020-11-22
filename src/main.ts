@@ -30,36 +30,13 @@ function execShellCommand(cmd: string): Promise<string> {
 async function run() {
     try {
         await execShellCommand('echo \'dir: ' + __dirname + '\'');
-
-        let cmd = 'curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -';
+        let cmd = 'sudo apt-get -qq update && sudo apt-get -qq -y install libnss3-tools'
         console.log(cmd);
         await execShellCommand(cmd);
-        cmd = 'sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"';
+        cmd = 'curl -LO https://raw.githubusercontent.com/drud/ddev/master/scripts/install_ddev.sh && bash install_ddev.sh\n';
         console.log(cmd);
         await execShellCommand(cmd);
-        cmd = 'sudo apt-get update'
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce libnss3-tools'
-        console.log(cmd);
-        await execShellCommand(cmd);
-        core.addPath('/home/linuxbrew/.linuxbrew/bin');
-        cmd = '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"';
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'brew tap drud/ddev';
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'brew install ddev docker-compose mkcert nss';
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'mkcert -install';
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'ddev config global --instrumentation-opt-in=false';
-        console.log(cmd);
-        await execShellCommand(cmd);
-        cmd = 'ddev config global --omit-containers=dba,ddev-ssh-agent';
+        cmd = 'ddev config global --instrumentation-opt-in=false --omit-containers=dba,ddev-ssh-agent';
         console.log(cmd);
         await execShellCommand(cmd);
         let _nginxTmplPath = path.join(__dirname, '..', '.ddev', 'patches', 'ddev-router', 'nginx.tmpl');
