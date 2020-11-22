@@ -30,7 +30,7 @@ function execShellCommand(cmd: string): Promise<string> {
 async function run() {
     try {
         await execShellCommand('echo \'dir: ' + __dirname + '\'');
-        let cmd = 'sudo apt-get update -qq && apt-get -qq -y -o Dpkg::Options::="--force-confnew" install libnss3-tools'
+        let cmd = 'sudo apt-get -qq update && sudo apt-get -qq -y install libnss3-tools'
         console.log(cmd);
         await execShellCommand(cmd);
         cmd = 'curl -LO https://raw.githubusercontent.com/drud/ddev/master/scripts/install_ddev.sh && bash install_ddev.sh\n';
