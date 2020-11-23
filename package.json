@@ -4,9 +4,6 @@
   "private": true,
   "description": "",
   "main": "lib/main.js",
-  "scripts": {
-    "build": "tsc"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jonaseberle/github-action-setup-ddev.git"
@@ -20,7 +17,6 @@
   "license": "GPL v3",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@types/node": "^12.12.47",
-    "typescript": "^3.9.6"
+    "@types/node": "^12.12.47"
   }
 }
