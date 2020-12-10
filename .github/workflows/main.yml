@@ -10,4 +10,7 @@ jobs:
         os: [ubuntu-16.04, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v1
-      - uses: rfay/github-action-setup-ddev@20201204_remove_router_hack
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: node lib/main.js
