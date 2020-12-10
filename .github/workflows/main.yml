@@ -10,4 +10,4 @@ jobs:
         os: [ubuntu-16.04, ubuntu-18.04]
     steps:
       - uses: actions/checkout@v1
-      - uses: jonaseberle/github-action-setup-ddev@master
+      - uses: rfay/github-action-setup-ddev@20201204_remove_router_hack
