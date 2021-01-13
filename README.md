@@ -15,7 +15,7 @@ Then it starts ddev. Any additional services that you might have configured will
 ## Example usage
 
 This is a full example that you could copy to `.github/workflows/test.yml`: 
-```
+```yaml
 on: [push, pull_request]
 
 jobs:
@@ -35,7 +35,35 @@ jobs:
 ```
 In short (for experienced Github Actioneers): 
 ```
- - uses: jonaseberle/github-action-setup-ddev@v1
+  - uses: jonaseberle/github-action-setup-ddev@v1
+```
+
+If you have your `.ddev` folder outside of the repository root, you can specify it with following option:
+```yaml
+  - uses: jonaseberle/github-action-setup-ddev@v1
+    with:
+      ddevDir: ".devbox"
+```
+
+This will ensure that the initial setup will be done correctly. 
+
+If you run addtional ddev commands like `- run: ddev composer install` it's important to switch directories manually first, in each `- run`-section.
+
+Can be done like this:
+
+```yaml
+jobs:
+  test:
+    runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: jonaseberle/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
+      # example: composer install
+      - run: |
+          cd .devbox
+          ddev composer install
 ```
 
 ## Contact
