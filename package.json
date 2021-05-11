@@ -2,6 +2,7 @@
   "name": "github-action-setup-ddev",
   "version": "1.0.0",
   "private": true,
+  "license": "GPL v3",
   "description": "",
   "main": "lib/main.js",
   "repository": {
@@ -14,7 +15,6 @@
     "setup"
   ],
   "author": "Jonas Eberle",
-  "license": "GPL v3",
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@types/node": "^12.12.47"
