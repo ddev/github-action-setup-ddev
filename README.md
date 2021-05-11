@@ -20,7 +20,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
+    runs-on: ubuntu-18.04    # tested on: ubuntu-16.04/18.04/20.04
     steps:
       - uses: actions/checkout@v1
       - uses: jonaseberle/github-action-setup-ddev@v1
@@ -52,11 +52,7 @@ If you run addtional ddev commands like `- run: ddev composer install` it's impo
 Can be done like this:
 
 ```yaml
-jobs:
-  test:
-    runs-on: ubuntu-18.04    # supported: ubuntu-16.04 and ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
+   ...
       - uses: jonaseberle/github-action-setup-ddev@v1
         with:
           ddevDir: ".devbox"
