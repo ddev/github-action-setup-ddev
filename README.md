@@ -47,7 +47,8 @@ If you have your `.ddev` folder outside of the repository root, you can specify 
 
 This will ensure that the initial setup will be done correctly. 
 
-If you run addtional ddev commands like `- run: ddev composer install` it's important to switch directories manually first, in each `- run`-section.
+If you run additional ddev commands like `- run: ddev composer install` it's important to switch directories 
+manually first, in each `- run`-section.
 
 Can be done like this:
 
@@ -61,6 +62,15 @@ Can be done like this:
           cd .devbox
           ddev composer install
 ```
+
+If you don't want ddev to start automatically, you can specify it with the following option:
+```yaml
+  - uses: jonaseberle/github-action-setup-ddev@v1
+    with:
+      autostart: false
+```
+
+
 
 ## Contact
 

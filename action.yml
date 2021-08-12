@@ -12,3 +12,7 @@ inputs:
     description: 'Directory where ddev is location if not in root directory'
     required: false
     default: '.'
+  autostart:
+    description: 'Boolean value to decide if ddev starts automatically'
+    required: false
+    default: true
