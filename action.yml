@@ -9,10 +9,10 @@ branding:
   color: yellow
 inputs:
   ddevDir:
-    description: 'Directory where ddev is location if not in root directory'
+    description: 'ddev project directory'
     required: false
     default: '.'
   autostart:
-    description: 'Boolean value to decide if ddev starts automatically'
+    description: 'Start ddev automatically'
     required: false
     default: true
