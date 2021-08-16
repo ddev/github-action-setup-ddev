@@ -17,10 +17,12 @@ jobs:
       - name: ddev stopped
         run: |
           cd tests/fixtures/ddevProj1
-          test 'stopped' = "$(ddev describe --json-output | jq '.raw.status')"
+          test '"stopped"' = "$(ddev describe --json-output | jq '.raw.status')"
       - name: start ddev
-        run: ddev start
+        run: |
+          cd tests/fixtures/ddevProj1
+          ddev start --json-output --skip-confirmation
       - name: Mailhog reachable
         run: curl --silent --dump-header - --output /dev/null https://setup-ddev-proj1.ddev.site:8026
-      - name: index.html: expected output
+      - name: "index.html: expected output"
         run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.ddev.site)"
