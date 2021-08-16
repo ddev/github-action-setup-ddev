@@ -11,3 +11,16 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: ./
+        with:
+          ddevDir: tests/fixtures/ddevProj1
+          autostart: false
+      - name: ddev stopped
+        run: |
+          cd tests/fixtures/ddevProj1
+          test 'stopped' = "$(ddev describe --json-output | jq '.raw.status')"
+      - name: start ddev
+        run: ddev start
+      - name: Mailhog reachable
+        run: curl --silent --dump-header - --output /dev/null https://setup-ddev-proj1.ddev.site:8026
+      - name: index.html: expected output
+        run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.ddev.site)"
