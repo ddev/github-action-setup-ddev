@@ -30,9 +30,10 @@ jobs:
 
 #### ddevDir
 
-`default: ./.ddev`
+Path to your ddev project.
 
-If the `.ddev` folder is outside of the repository root, you can specify it with the option `ddevDir`:
+default: `.` (root directory)
+
 ```yaml
   - uses: jonaseberle/github-action-setup-ddev@v1
     with:
@@ -44,9 +45,10 @@ If the `.ddev` folder is outside of the repository root, you can specify it with
 ```
 #### autostart
 
+Starts your ddev project immediately. 
+
 `default: true`
 
-If you don't want ddev to start automatically, you can specify it with the following option:
 ```yaml
   - uses: jonaseberle/github-action-setup-ddev@v1
     with:
