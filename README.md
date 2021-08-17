@@ -47,7 +47,7 @@ default: `.` (root directory)
 
 Starts your ddev project immediately. 
 
-`default: true`
+default: `true`
 
 ```yaml
   - uses: jonaseberle/github-action-setup-ddev@v1
