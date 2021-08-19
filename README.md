@@ -38,11 +38,11 @@ default: `.` (root directory)
   - uses: jonaseberle/github-action-setup-ddev@v1
     with:
       ddevDir: ".devbox"
-  # make sure to cd into that directory before using `ddev` commands
-  - run: |
-      cd .devbox
-      ddev composer install
+  # run `ddev` project commands from that directory
+  - run: ddev composer install
+    working-directory: .devbox
 ```
+
 #### autostart
 
 Starts your ddev project immediately. 
