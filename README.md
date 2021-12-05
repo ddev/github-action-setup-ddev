@@ -45,7 +45,7 @@ default: `.` (root directory)
 
 #### autostart
 
-Starts your ddev project immediately. 
+Starts your ddev project immediately.
 
 default: `true`
 
@@ -55,6 +55,23 @@ default: `true`
       autostart: false
 ```
 
+## Common recipes
+
+### SSH keys
+
+If your workflow needs to reach remote destinations that require private SSH keys, here is a snippet showing how you might add SSH keys that you have entered as Github "secrets":
+
+```
+- name: Set up SSH keys
+  run: |
+    mkdir -p .ddev/homeadditions/.ssh
+    echo "${{ secrets.MY_KEY }}" > .ddev/homeadditions/.ssh/id_rsa
+    echo "${{ secrets.MY_KNOWN_HOSTS }}" > .ddev/homeadditions/.ssh/known_hosts
+    chmod 700 .ddev/homeadditions/.ssh
+    chmod 600 .ddev/homeadditions/.ssh/id_rsa
+- name: Set up ddev
+  uses: jonaseberle/github-action-setup-ddev@v1
+```
 
 ## Contact
 
