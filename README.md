@@ -1,14 +1,14 @@
 [![Tests](https://github.com/jonaseberle/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/jonaseberle/github-action-setup-ddev/actions)
 
-# Setup and start ddev action
+# Setup and start DDEV action
 
-This **Github action** starts [ddev](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
+This **GitHub action** starts [DDEV](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
 
 The idea is to reuse the same environment that you are maintaining for development anyways for automated acceptance testing, thus saving on maintaining a separate CI-configuration.
 
 Any additional services that you might have configured will be started and any post-start hooks etc. will be run.
 
-## Example Github workflow
+## Example GitHub workflow
 
 ```yaml
 on: [push, pull_request]
@@ -30,7 +30,7 @@ jobs:
 
 #### ddevDir
 
-Path to your ddev project.
+Path to your DDEV project.
 
 default: `.` (root directory)
 
@@ -45,7 +45,7 @@ default: `.` (root directory)
 
 #### autostart
 
-Starts your ddev project immediately.
+Starts your DDEV project immediately.
 
 default: `true`
 
@@ -59,7 +59,7 @@ default: `true`
 
 ### SSH keys
 
-If your workflow needs to reach remote destinations that require private SSH keys, here is a snippet showing how you might add SSH keys that you have entered as Github "secrets":
+If your workflow needs to reach remote destinations that require private SSH keys, here is a snippet showing how you might add SSH keys that you have entered as GitHub "secrets":
 
 ```
 - name: Set up SSH keys
@@ -75,6 +75,6 @@ If your workflow needs to reach remote destinations that require private SSH key
 
 ## Contact
 
-For **bugs** and **feature requests** use the [Github bug tracker](https://github.com/jonaseberle/github-action-setup-ddev/issues).
+For **bugs** and **feature requests** use the [GitHub bug tracker](https://github.com/jonaseberle/github-action-setup-ddev/issues).
 
 Pull requests are very welcome.
