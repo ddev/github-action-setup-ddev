@@ -14,9 +14,12 @@
     "ddev",
     "setup"
   ],
+  "engines": {
+    "node": "^18.16.0"
+  },
   "author": "Jonas Eberle",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@types/node": "^12.12.47"
+    "@types/node": "^18.16.0"
   }
 }
