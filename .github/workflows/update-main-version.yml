@@ -21,7 +21,9 @@ env:
 
 jobs:
   tag:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lates
+    tpermissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
       with:
@@ -33,5 +35,4 @@ jobs:
     - name: Tag new target
       run: git tag -f ${{ github.event.inputs.major_version || env.DEFAULT_MAJOR_VERSION }} ${{ github.event.inputs.target || github.sha }}
     - name: Push new tag
-      run: git push origin ${{ github.event.inputs.major_version || env.major_version }} --force
-DEFAULT_MAJOR_VERSION
+      run: git push origin ${{ github.event.inputs.major_version || env.DEFAULT_MAJOR_VERSION }} --force
