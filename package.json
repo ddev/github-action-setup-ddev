@@ -7,7 +7,7 @@
   "main": "lib/main.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jonaseberle/github-action-setup-ddev.git"
+    "url": "git+https://github.com/ddev/github-action-setup-ddev.git"
   },
   "keywords": [
     "actions",
