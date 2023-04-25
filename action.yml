@@ -1,5 +1,5 @@
-name: 'Setup ddev'
-description: 'Set up your GitHub Actions workflow with ddev '
+name: 'Setup DDEV'
+description: 'Set up your GitHub Actions workflow with DDEV'
 author: 'Jonas Eberle'
 runs:
   using: 'node16'
