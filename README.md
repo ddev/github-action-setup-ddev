@@ -1,4 +1,4 @@
-[![Tests](https://github.com/jonaseberle/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/jonaseberle/github-action-setup-ddev/actions)
+[![Tests](https://github.com/ddev/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/ddev/github-action-setup-ddev/actions)
 
 # Setup and start DDEV action
 
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-18.04    # tested on: 18.04/20.04
     steps:
       - uses: actions/checkout@v1
-      - uses: jonaseberle/github-action-setup-ddev@v1
+      - uses: ddev/github-action-setup-ddev@v1
       # example: composer install
       - run: ddev composer install
       # example: fill database
@@ -35,7 +35,7 @@ Path to your DDEV project.
 default: `.` (root directory)
 
 ```yaml
-  - uses: jonaseberle/github-action-setup-ddev@v1
+  - uses: ddev/github-action-setup-ddev@v1
     with:
       ddevDir: ".devbox"
   # run `ddev` project commands from that directory
@@ -50,7 +50,7 @@ Starts your DDEV project immediately.
 default: `true`
 
 ```yaml
-  - uses: jonaseberle/github-action-setup-ddev@v1
+  - uses: ddev/github-action-setup-ddev@v1
     with:
       autostart: false
 ```
@@ -70,11 +70,11 @@ If your workflow needs to reach remote destinations that require private SSH key
     chmod 700 .ddev/homeadditions/.ssh
     chmod 600 .ddev/homeadditions/.ssh/id_rsa
 - name: Set up ddev
-  uses: jonaseberle/github-action-setup-ddev@v1
+  uses: ddev/github-action-setup-ddev@v1
 ```
 
 ## Contact
 
-For **bugs** and **feature requests** use the [GitHub bug tracker](https://github.com/jonaseberle/github-action-setup-ddev/issues).
+For **bugs** and **feature requests** use the [GitHub bug tracker](https://github.com/ddev/github-action-setup-ddev/issues).
 
 Pull requests are very welcome.
