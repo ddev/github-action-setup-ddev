@@ -1,0 +1,41 @@
+name: Update Main Version
+run-name: Move ${{ github.event.inputs.major_version || env.MAJOR_VERSION }} to ${{ github.event.inputs.target || github.sha }}
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.**'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: The tag or reference to use
+        required: true
+      major_version:
+        type: choice
+        description: The major version to update
+        options:
+          - v1
+
+env:
+  MAJOR_VERSION: 'v1'
+
+jobs:
+  tag:
+    runs-on: ubuntu-lates
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Git config
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+    #- name: Get major version from tag name
+    #  if: ${{ github.event_name === 'push' }}
+    #  run: echo "MAJOR_VERSION=`echo ${GITHUB_REF#refs/*/} | cut -c1-2`" >> $GITHUB_ENV
+    - name: Tag new target
+      run: git tag -f ${{ github.event.inputs.major_version || env.MAJOR_VERSION }} ${{ github.event.inputs.target || github.sha }}
+    - name: Push new tag
+      run: git push origin ${{ github.event.inputs.major_version || env.MAJOR_VERSION }} --force
