@@ -9,7 +9,7 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     permissions:
       contents: write
-      pull-request: write
+      pull-requests: write
     steps:
       - uses: actions/setup-node@v3
         with:
