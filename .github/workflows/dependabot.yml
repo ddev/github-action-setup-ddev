@@ -22,6 +22,10 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
+      - name: Stage changes
+        run: git add -A node_modules
+      - name: Commit changes
+        run: git commit -m "Updated node_modules"
       - name: Push changes to PR
         run: git push
       - name: Dependabot metadata
