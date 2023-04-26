@@ -1,5 +1,5 @@
 name: Update Main Version
-run-name: Move ${{ github.event.inputs.major_version || env.MAJOR_VERSION }} to ${{ github.event.inputs.target || github.sha }}
+run-name: Move ${{ github.event.inputs.major_version || 'latest branch tag' }} to ${{ github.event.inputs.target || github.sha }}
 
 on:
   push:
