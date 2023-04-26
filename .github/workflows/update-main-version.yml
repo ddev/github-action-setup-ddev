@@ -21,7 +21,7 @@ env:
 
 jobs:
   tag:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
