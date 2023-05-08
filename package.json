@@ -17,6 +17,6 @@
   "author": "Jonas Eberle",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@types/node": "^12.12.47"
+    "@types/node": "^20.1.0"
   }
 }
