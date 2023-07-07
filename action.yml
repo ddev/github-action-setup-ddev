@@ -1,10 +1,6 @@
 name: 'Setup DDEV in Github Workflows'
 description: |
   This action installs **DDEV** in your Github Workflow.
-  It's main use case is to run your Continuous Integration
-  tests against your already configured development environment. 
-  That'll facilitate developing your tests – if they run locally, 
-  they'll run in github actions, too.
 author: 'Jonas Eberle and DDEV contributors'
 runs:
   using: 'node16'
