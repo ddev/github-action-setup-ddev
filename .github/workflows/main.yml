@@ -19,9 +19,9 @@ jobs:
       - name: ddev version
         run: |
           if [[ ${{ matrix.version }} == '1.22.3' ]]; then
-            test $(ddev --version) == 'ddev version v1.22.3'
+            test "$(ddev --version)" == 'ddev version v1.22.3'
           else
-            test $(ddev --version) != 'ddev version v1.22.3'
+            test "$(ddev --version)" != 'ddev version v1.22.3'
           fi
       - name: ddev stopped
         run: |
