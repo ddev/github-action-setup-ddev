@@ -17,3 +17,7 @@ inputs:
     description: 'Start ddev automatically'
     required: false
     default: true
+  version:
+    description: 'Install a specific ddev version, such as 1.22.4'
+    required: false
+    default: 'latest'
