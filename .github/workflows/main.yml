@@ -10,7 +10,7 @@ jobs:
         os: [ubuntu-20.04, ubuntu-22.04]
         version: ['latest', '1.22.3']
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./
         with:
           ddevDir: tests/fixtures/ddevProj1
