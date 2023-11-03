@@ -55,6 +55,18 @@ default: `true`
       autostart: false
 ```
 
+#### version
+
+Install a specific ddev version. The version must be available in ddev's apt repository.
+
+default: `latest`
+
+```yaml
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      version: 1.22.4
+```
+
 ## Common recipes
 
 ### SSH keys
