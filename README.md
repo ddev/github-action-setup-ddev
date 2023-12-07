@@ -15,31 +15,48 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-18.04    # tested on: 18.04/20.04
+    runs-on: ubuntu-22.04    # tested on: 20.04/22.04
     steps:
       - uses: actions/checkout@v1
-      - uses: ddev/github-action-setup-ddev@v1
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+
       # example: composer install
       - run: ddev composer install
+
       # example: fill database
       - run: ddev mysql < data/db.sql
-      # ... and so on.
+
+      # ... and so on. For example:
+      - run: ddev exec bin/myAcceptanceTests.sh
+      - run: ddev exec make tests
+      - run: ddev composer ci:tests
+      - run: ddev composer ci:tests:acceptance:${{ matrix.browser }}
+      - run: ddev yarn --frozen-lockfile --no-progress --non-interactive && ddev yarn mocha-tests
+      - run: ddev npm ci && ddev npm run mocha-tests
+      - run: test 'test for expected output' = "$(curl --silent https://my-ddev-project.ddev.site)"
+
+      # use different PHP version in a test matrix
+      - run: |
+         sed -i -e 's/^php_version:.*/php_version: ${{ matrix.php-version }}/g' .ddev/config.yaml \
+           && ddev start
 ```
 
 ### Options
 
 #### ddevDir
 
-Path to your DDEV project.
+Path to your DDEV project. This path needs to contain the `.ddev/` directory.
 
 default: `.` (root directory)
 
 ```yaml
-  - uses: ddev/github-action-setup-ddev@v1
+  - name: Setup DDEV
+    uses: ddev/github-action-setup-ddev@v1
     with:
       ddevDir: ".devbox"
-  # run `ddev` project commands from that directory
-  - run: ddev composer install
+  - name: 'You need to switch to that directory to use the `ddev` command'
+    run: ddev composer install
     working-directory: .devbox
 ```
 
@@ -71,17 +88,20 @@ default: `latest`
 
 ### SSH keys
 
-If your workflow needs to reach remote destinations that require private SSH keys, here is a snippet showing how you might add SSH keys that you have entered as GitHub "secrets":
+If your workflow needs to reach remote destinations that require private SSH keys,
+we recommend adding SSH keys that you have entered as [GitHub "secrets"](https://docs.github.com/en/actions/security-guides/encrypted-secrets):
 
 ```
-- name: Set up SSH keys
+- name: Setup SSH keys
   run: |
     mkdir -p .ddev/homeadditions/.ssh
     echo "${{ secrets.MY_KEY }}" > .ddev/homeadditions/.ssh/id_rsa
-    echo "${{ secrets.MY_KNOWN_HOSTS }}" > .ddev/homeadditions/.ssh/known_hosts
     chmod 700 .ddev/homeadditions/.ssh
     chmod 600 .ddev/homeadditions/.ssh/id_rsa
-- name: Set up ddev
+- name 'optional: set up host keys'
+  run: |
+    echo "${{ secrets.MY_KNOWN_HOSTS }}" > .ddev/homeadditions/.ssh/known_hosts
+- name: Setup DDEV
   uses: ddev/github-action-setup-ddev@v1
 ```
 
