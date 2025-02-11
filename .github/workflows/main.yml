@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
-        version: ['latest', '1.22.3']
+        os: [ubuntu-22.04, ubuntu-24.04]
+        version: ['latest', '1.24.0']
     steps:
       - uses: actions/checkout@v4
       - uses: ./
@@ -28,10 +28,10 @@ jobs:
           version: ${{ matrix.version }}
       - name: ddev version
         run: |
-          if [[ ${{ matrix.version }} == '1.22.3' ]]; then
-            test "$(ddev --version)" == 'ddev version v1.22.3'
+          if [[ ${{ matrix.version }} == '1.24.0' ]]; then
+            test "$(ddev --version)" == 'ddev version v1.24.0'
           else
-            test "$(ddev --version)" != 'ddev version v1.22.3'
+            test "$(ddev --version)" != 'ddev version v1.24.0'
           fi
       - name: ddev stopped
         run: |
@@ -41,7 +41,7 @@ jobs:
         run: |
           cd tests/fixtures/ddevProj1
           ddev start --json-output --skip-confirmation
-      - name: Mailhog reachable
+      - name: Mailpit reachable
         run: curl --silent --dump-header - --output /dev/null https://setup-ddev-proj1.ddev.site:8026
       - name: "index.html: expected output"
         run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.ddev.site)"
