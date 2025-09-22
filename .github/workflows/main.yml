@@ -11,14 +11,17 @@ on:
   schedule:
     - cron: 0 0 * * *
 
+env:
+  OLD_DDEV_VERSION: '1.24.7'
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
-        version: ['latest', '1.24.0']
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        version: ['latest', '${{ env.OLD_DDEV_VERSION }}']
     steps:
       - uses: actions/checkout@v5
       - uses: ./
@@ -28,10 +31,10 @@ jobs:
           version: ${{ matrix.version }}
       - name: ddev version
         run: |
-          if [[ ${{ matrix.version }} == '1.24.0' ]]; then
-            test "$(ddev --version)" == 'ddev version v1.24.0'
+          if [[ ${{ matrix.version }} == '${{ env.OLD_DDEV_VERSION }}' ]]; then
+            test "$(ddev --version)" == 'ddev version v${{ env.OLD_DDEV_VERSION }}'
           else
-            test "$(ddev --version)" != 'ddev version v1.24.0'
+            test "$(ddev --version)" != 'ddev version v${{ env.OLD_DDEV_VERSION }}'
           fi
       - name: ddev stopped
         run: |
