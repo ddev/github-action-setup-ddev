@@ -84,6 +84,99 @@ default: `latest`
       version: 1.22.4
 ```
 
+### installScriptUrl
+
+URL to the DDEV installation script. This allows you to specify a custom or alternative source for the DDEV installation script.
+
+default: `https://raw.githubusercontent.com/ddev/ddev/master/scripts/install_ddev.sh`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      installScriptUrl: "https://raw.githubusercontent.com/ddev/ddev/v1.22.4/scripts/install_ddev.sh"
+```
+
+This option is useful for:
+- Using a specific version of the installation script from a tagged release
+- Testing with a development version from a specific branch
+- Using a forked or modified version of the installation script
+- Working with air-gapped environments that require local script hosting
+
+Example with custom script source:
+
+```
+  - name: Setup DDEV with custom installation script
+    uses: ddev/github-action-setup-ddev@v1
+    with:
+      installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
+      version: "v1.22.4"
+      retryAttempts: 3
+```
+
+### Retry configuration options
+
+The action includes built-in retry logic with exponential backoff for improved reliability in CI/CD environments. These options are all optional and have sensible defaults.
+
+#### retryAttempts
+
+Maximum number of retry attempts for DDEV installation and operations.
+
+default: `5`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      retryAttempts: 5
+```
+
+#### initialDelay
+
+Initial delay in seconds between retries.
+
+default: `2`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      initialDelay: 5
+```
+
+#### maxDelay
+
+Maximum delay in seconds between retries. This prevents the delay from growing too large with exponential backoff.
+
+default: `30`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      maxDelay: 60
+```
+
+#### retryMultiplier
+
+Delay multiplier for exponential backoff. Each retry will multiply the previous delay by this value.
+
+default: `2`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      retryMultiplier: 3
+```
+
+#### jitterPercent
+
+Jitter percentage (0-100) to add randomness to retry delays. This helps prevent thundering herd problems when multiple jobs retry simultaneously.
+
+default: `25`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      jitterPercent: 50
+```
+
 ## Common recipes
 
 ### SSH keys
