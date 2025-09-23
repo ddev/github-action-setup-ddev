@@ -18,31 +18,6 @@ inputs:
     required: false
     default: 'latest'
 
-  retryAttempts:
-    description: 'Maximum number of retry attempts for DDEV installation and operations'
-    required: false
-    default: '5'
-
-  initialDelay:
-    description: 'Initial delay in seconds between retries'
-    required: false
-    default: '2'
-
-  maxDelay:
-    description: 'Maximum delay in seconds between retries'
-    required: false
-    default: '30'
-
-  retryMultiplier:
-    description: 'Delay multiplier for exponential backoff'
-    required: false
-    default: '2'
-
-  jitterPercent:
-    description: 'Jitter percentage (0-100) to add randomness to retry delays'
-    required: false
-    default: '25'
-
   installScriptUrl:
     description: 'URL to the DDEV installation script'
     required: true
@@ -53,15 +28,8 @@ runs:
   steps:
     - name: Download DDEV install script
       shell: bash
-      run: |       
-        "${{ github.action_path }}/scripts/retry.sh" \
-          --attempts "${{ inputs.retryAttempts }}" \
-          --initial-delay "${{ inputs.initialDelay }}" \
-          --max-delay "${{ inputs.maxDelay }}" \
-          --multiplier "${{ inputs.retryMultiplier }}" \
-          --jitter "${{ inputs.jitterPercent }}" \
-          --description "Download DDEV install script" \
-          -- curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused \
+      run: |
+        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused \
              -o /tmp/install_ddev.sh \
              "${{ inputs.installScriptUrl }}"
 
@@ -79,14 +47,7 @@ runs:
         # Make installation script executable
         chmod +x /tmp/install_ddev.sh
         
-        "${{ github.action_path }}/scripts/retry.sh" \
-          --attempts "${{ inputs.retryAttempts }}" \
-          --initial-delay "${{ inputs.initialDelay }}" \
-          --max-delay "${{ inputs.maxDelay }}" \
-          --multiplier "${{ inputs.retryMultiplier }}" \
-          --jitter "${{ inputs.jitterPercent }}" \
-          --description "DDEV installation" \
-          -- /tmp/install_ddev.sh ${VERSION_ARG}
+        /tmp/install_ddev.sh ${VERSION_ARG}
 
     - name: Start DDEV project
       shell: bash
