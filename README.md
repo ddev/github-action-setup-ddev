@@ -88,7 +88,7 @@ default: `latest`
 
 URL to the DDEV installation script. This allows you to specify a custom or alternative source for the DDEV installation script.
 
-default: `https://raw.githubusercontent.com/ddev/ddev/master/scripts/install_ddev.sh`
+default: `https://ddev.com/install.sh`
 
 ```
   - uses: ddev/github-action-setup-ddev@v1

@@ -46,7 +46,7 @@ inputs:
   installScriptUrl:
     description: 'URL to the DDEV installation script'
     required: true
-    default: 'https://raw.githubusercontent.com/ddev/ddev/master/scripts/install_ddev.sh'
+    default: 'https://ddev.com/install.sh'
 
 runs:
   using: 'composite'
