@@ -9,8 +9,10 @@ on:
       - v*
 
 jobs:
-  update-version:
-    runs-on: ubuntu-latest
+  tag:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v5
         with:
