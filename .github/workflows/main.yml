@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04]
-        version: ['latest', '1.24.0']
+        os: [ubuntu-24.04, ubuntu-24.04-arm]
+        version: ['latest', '1.24.7']
     steps:
       - uses: actions/checkout@v5
       - uses: ./
@@ -28,10 +28,10 @@ jobs:
           version: ${{ matrix.version }}
       - name: ddev version
         run: |
-          if [[ ${{ matrix.version }} == '1.24.0' ]]; then
-            test "$(ddev --version)" == 'ddev version v1.24.0'
+          if [[ ${{ matrix.version }} == '1.24.7' ]]; then
+            test "$(ddev --version)" == 'ddev version v1.24.7'
           else
-            test "$(ddev --version)" != 'ddev version v1.24.0'
+            test "$(ddev --version)" != 'ddev version v1.24.7'
           fi
       - name: ddev stopped
         run: |
