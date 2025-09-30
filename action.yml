@@ -3,7 +3,7 @@ description: |
   This action installs **DDEV** in your Github Workflow.
 author: 'Jonas Eberle and DDEV contributors'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'lib/main.js'
 branding:
   icon: cpu
