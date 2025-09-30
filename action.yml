@@ -1,4 +1,4 @@
-name: 'Setup DDEV in Github Workflows'
+name: 'Setup DDEV in GitHub Workflows'
 description: 'Set up your GitHub Actions workflow with DDEV'
 author: 'Jonas Eberle and DDEV contributors'
 
