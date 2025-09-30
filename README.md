@@ -1,4 +1,7 @@
-[![Tests](https://github.com/ddev/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/ddev/github-action-setup-ddev/actions)
+[![marketplace](https://img.shields.io/badge/GitHub-Marketplace-2496ED?logo=github&logoColor=white)](https://github.com/marketplace/actions/setup-ddev-in-github-workflows)
+[![tests](https://github.com/ddev/github-action-setup-ddev/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/ddev/github-action-setup-ddev/actions/workflows/main.yml?query=branch%3Amain)
+[![last commit](https://img.shields.io/github/last-commit/ddev/github-action-setup-ddev)](https://github.com/ddev/github-action-setup-ddev/commits)
+[![release](https://img.shields.io/github/v/release/ddev/github-action-setup-ddev)](https://github.com/ddev/github-action-setup-ddev/releases/latest)
 
 # Setup and start DDEV action
 
