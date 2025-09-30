@@ -1,4 +1,4 @@
-[![Tests](https://github.com/ddev/github-action-setup-ddev/workflows/tests/badge.svg?event=push)](https://github.com/ddev/github-action-setup-ddev/actions)
+[![tests](https://github.com/ddev/github-action-setup-ddev/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/ddev/github-action-setup-ddev/actions/workflows/main.yml)
 
 # Setup and start DDEV action
 
