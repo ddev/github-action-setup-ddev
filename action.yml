@@ -1,23 +1,62 @@
-name: 'Setup DDEV in Github Workflows'
-description: |
-  This action installs **DDEV** in your Github Workflow.
+name: 'Setup and start DDEV action'
+description: 'Set up your GitHub Actions workflow with DDEV'
 author: 'Jonas Eberle and DDEV contributors'
-runs:
-  using: 'node24'
-  main: 'lib/main.js'
-branding:
-  icon: cpu
-  color: yellow
+
 inputs:
   ddevDir:
-    description: 'ddev project directory'
+    description: 'Path to your DDEV project. This path needs to contain the .ddev/ directory.'
     required: false
     default: '.'
+
   autostart:
-    description: 'Start ddev automatically'
+    description: 'Starts your DDEV project immediately.'
     required: false
-    default: true
+    default: 'true'
+
   version:
-    description: 'Install a specific ddev version, such as 1.22.4'
+    description: 'Install a specific DDEV version. Example: 1.24.0'
     required: false
     default: 'latest'
+
+  installScriptUrl:
+    description: 'URL to the DDEV installation script'
+    required: true
+    default: 'https://ddev.com/install.sh'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Download DDEV install script
+      shell: bash
+      run: |
+        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused \
+             -o /tmp/install_ddev.sh \
+             "${{ inputs.installScriptUrl }}"
+
+    - name: Install DDEV
+      shell: bash
+      run: |
+        if [[ '${{ inputs.version }}' != 'latest' ]]; then
+          VERSION_ARG="v${{ inputs.version }}"
+          echo "Installing DDEV version: ${VERSION_ARG}"
+        else
+          VERSION_ARG=""
+          echo "Installing latest DDEV version"
+        fi
+        
+        # Make installation script executable
+        chmod +x /tmp/install_ddev.sh
+        
+        /tmp/install_ddev.sh ${VERSION_ARG}
+        ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+
+    - name: Start DDEV project
+      shell: bash
+      working-directory: ${{ inputs.ddevDir }}
+      if: inputs.autostart == 'true'
+      run: |
+        ddev start
+
+branding:
+  icon: 'cpu'
+  color: yellow

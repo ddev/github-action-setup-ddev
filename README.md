@@ -84,6 +84,34 @@ default: `latest`
       version: 1.22.4
 ```
 
+### installScriptUrl
+
+URL to the DDEV installation script. This allows you to specify a custom or alternative source for the DDEV installation script.
+
+default: `https://ddev.com/install.sh`
+
+```
+  - uses: ddev/github-action-setup-ddev@v1
+    with:
+      installScriptUrl: "https://raw.githubusercontent.com/ddev/ddev/v1.22.4/scripts/install_ddev.sh"
+```
+
+This option is useful for:
+- Using a specific version of the installation script from a tagged release
+- Testing with a development version from a specific branch
+- Using a forked or modified version of the installation script
+- Working with air-gapped environments that require local script hosting
+
+Example with custom script source:
+
+```
+  - name: Setup DDEV with custom installation script
+    uses: ddev/github-action-setup-ddev@v1
+    with:
+      installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
+      version: "v1.22.4"
+```
+
 ## Common recipes
 
 ### SSH keys
