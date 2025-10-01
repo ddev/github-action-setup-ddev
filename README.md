@@ -45,9 +45,9 @@ jobs:
            && ddev start
 ```
 
-### Options
+## Options
 
-#### ddevDir
+### ddevDir
 
 Path to your DDEV project. This path needs to contain the `.ddev/` directory.
 
@@ -63,7 +63,7 @@ default: `.` (root directory)
     working-directory: .devbox
 ```
 
-#### autostart
+### autostart
 
 Starts your DDEV project immediately.
 
@@ -75,7 +75,7 @@ default: `true`
       autostart: false
 ```
 
-#### version
+### version
 
 Install a specific ddev version. The version must be available in ddev's apt repository.
 
