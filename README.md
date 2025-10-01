@@ -5,7 +5,7 @@
 
 # Setup and start DDEV action
 
-This **GitHub action** starts [DDEV](https://github.com/drud/ddev/) with your project's configuration from the directory `.ddev`.
+This **GitHub action** starts [DDEV](https://github.com/ddev/ddev/) with your project's configuration from the directory `.ddev`.
 
 The idea is to reuse the same environment that you are maintaining for development anyways for automated acceptance testing, thus saving on maintaining a separate CI-configuration.
 
@@ -18,7 +18,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-22.04    # tested on: 20.04/22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - name: Setup DDEV
@@ -27,8 +27,8 @@ jobs:
       # example: composer install
       - run: ddev composer install
 
-      # example: fill database
-      - run: ddev mysql < data/db.sql
+      # example: populate database
+      - run: ddev import-db --file=data/db.sql.gz
 
       # ... and so on. For example:
       - run: ddev exec bin/myAcceptanceTests.sh
@@ -84,7 +84,7 @@ default: `latest`
 ```yaml
   - uses: ddev/github-action-setup-ddev@v1
     with:
-      version: 1.22.4
+      version: 1.24.7
 ```
 
 ### installScriptUrl
@@ -112,7 +112,7 @@ Example with custom script source:
     uses: ddev/github-action-setup-ddev@v1
     with:
       installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
-      version: "v1.22.4"
+      version: "v1.24.7"
 ```
 
 ## Common recipes
