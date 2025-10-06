@@ -54,13 +54,13 @@ Path to your DDEV project. This path needs to contain the `.ddev/` directory.
 default: `.` (root directory)
 
 ```yaml
-    - name: Setup DDEV
-      uses: ddev/github-action-setup-ddev@v1
-      with:
-        ddevDir: ".devbox"
-    - name: 'You need to switch to that directory to use the `ddev` command'
-      run: ddev composer install
-      working-directory: .devbox
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+        with:
+          ddevDir: ".devbox"
+      - name: 'You need to switch to that directory to use the `ddev` command'
+        run: ddev composer install
+        working-directory: .devbox
 ```
 
 ### autostart
@@ -70,9 +70,9 @@ Starts your DDEV project immediately.
 default: `true`
 
 ```yaml
-    - uses: ddev/github-action-setup-ddev@v1
-      with:
-        autostart: false
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
 ```
 
 ### version
@@ -82,9 +82,9 @@ Install a specific ddev version. The version must be available in ddev's apt rep
 default: `latest`
 
 ```yaml
-    - uses: ddev/github-action-setup-ddev@v1
-      with:
-        version: 1.24.7
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          version: 1.24.7
 ```
 
 ### installScriptUrl
@@ -94,9 +94,9 @@ URL to the DDEV installation script. This allows you to specify a custom or alte
 default: `https://ddev.com/install.sh`
 
 ```yaml
-    - uses: ddev/github-action-setup-ddev@v1
-      with:
-        installScriptUrl: "https://raw.githubusercontent.com/ddev/ddev/v1.22.4/scripts/install_ddev.sh"
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          installScriptUrl: "https://raw.githubusercontent.com/ddev/ddev/v1.22.4/scripts/install_ddev.sh"
 ```
 
 This option is useful for:
@@ -108,11 +108,11 @@ This option is useful for:
 Example with custom script source:
 
 ```yaml
-    - name: Setup DDEV with custom installation script
-      uses: ddev/github-action-setup-ddev@v1
-      with:
-        installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
-        version: "v1.24.7"
+      - name: Setup DDEV with custom installation script
+        uses: ddev/github-action-setup-ddev@v1
+        with:
+          installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
+          version: "v1.24.7"
 ```
 
 ## Common recipes
@@ -123,17 +123,17 @@ If your workflow needs to reach remote destinations that require private SSH key
 we recommend adding SSH keys that you have entered as [GitHub "secrets"](https://docs.github.com/en/actions/security-guides/encrypted-secrets):
 
 ```yaml
-    - name: Setup SSH keys
-      run: |
-        mkdir -p .ddev/homeadditions/.ssh
-        echo "${{ secrets.MY_KEY }}" > .ddev/homeadditions/.ssh/id_rsa
-        chmod 700 .ddev/homeadditions/.ssh
-        chmod 600 .ddev/homeadditions/.ssh/id_rsa
-    - name 'optional: set up host keys'
-      run: |
-        echo "${{ secrets.MY_KNOWN_HOSTS }}" > .ddev/homeadditions/.ssh/known_hosts
-    - name: Setup DDEV
-      uses: ddev/github-action-setup-ddev@v1
+      - name: Setup SSH keys
+        run: |
+          mkdir -p .ddev/homeadditions/.ssh
+          echo "${{ secrets.MY_KEY }}" > .ddev/homeadditions/.ssh/id_rsa
+          chmod 700 .ddev/homeadditions/.ssh
+          chmod 600 .ddev/homeadditions/.ssh/id_rsa
+      - name 'optional: set up host keys'
+        run: |
+          echo "${{ secrets.MY_KNOWN_HOSTS }}" > .ddev/homeadditions/.ssh/known_hosts
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
 ```
 
 ## Contact
