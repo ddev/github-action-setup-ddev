@@ -2,11 +2,12 @@ name: tests
 
 on:
   pull_request:
-  merge_group:
-    types: [checks_requested]
+    paths-ignore:
+      - "**.md"
   push:
-    branches:
-      - 'main'
+    branches: [ main ]
+    paths-ignore:
+      - "**.md"
   workflow_dispatch:
   schedule:
     - cron: 0 0 * * *
