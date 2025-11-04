@@ -9,6 +9,12 @@ on:
     paths-ignore:
       - "**.md"
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        description: 'Run the build with tmate set "debug_enabled"'
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: 0 0 * * *
 
@@ -19,7 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
-        version: ['latest', '1.24.7']
+        version: ['latest', 'head', '1.24.8']
     steps:
       - uses: actions/checkout@v5
       - uses: ./
@@ -27,22 +33,46 @@ jobs:
           ddevDir: tests/fixtures/ddevProj1
           autostart: false
           version: ${{ matrix.version }}
+
+      - name: Setup tmate session
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+
       - name: ddev version
         run: |
-          if [[ ${{ matrix.version }} == '1.24.7' ]]; then
-            test "$(ddev --version)" == 'ddev version v1.24.7'
+          ddev --version
+          if [[ ${{ matrix.version }} == '1.24.8' ]]; then
+            test "$(ddev --version)" == 'ddev version v1.24.8'
           else
-            test "$(ddev --version)" != 'ddev version v1.24.7'
+            test "$(ddev --version)" != 'ddev version v1.24.8'
           fi
+
       - name: ddev stopped
         run: |
           cd tests/fixtures/ddevProj1
           test '"stopped"' = "$(ddev describe --json-output | jq '.raw.status')"
+
       - name: start ddev
         run: |
           cd tests/fixtures/ddevProj1
           ddev start --json-output --skip-confirmation
+
       - name: Mailpit reachable
         run: curl --silent --dump-header - --output /dev/null https://setup-ddev-proj1.ddev.site:8026
+
       - name: "index.html: expected output"
         run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.ddev.site)"
+
+      - name: restart ddev with project_tld=test
+        run: |
+          cd tests/fixtures/ddevProj1
+          ddev config --project-tld=test
+          ddev restart --json-output --skip-confirmation
+
+      - name: Mailpit reachable
+        run: curl --silent --dump-header - --output /dev/null https://setup-ddev-proj1.test:8026
+
+      - name: "index.html: expected output"
+        run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.test)"

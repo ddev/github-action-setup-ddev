@@ -84,7 +84,7 @@ default: `latest`
 ```yaml
       - uses: ddev/github-action-setup-ddev@v1
         with:
-          version: 1.24.7
+          version: 1.24.8
 ```
 
 ### installScriptUrl
@@ -112,7 +112,7 @@ Example with custom script source:
         uses: ddev/github-action-setup-ddev@v1
         with:
           installScriptUrl: "https://my-company.com/scripts/custom_ddev_install.sh"
-          version: "v1.24.7"
+          version: "v1.24.8"
 ```
 
 ## Common recipes
