@@ -29,19 +29,26 @@ runs:
     - name: Download DDEV install script
       shell: bash
       run: |
-        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused \
-             -o /tmp/install_ddev.sh \
-             "${{ inputs.installScriptUrl }}"
+        if [[ '${{ inputs.version }}' == 'head' && '${{ inputs.installScriptUrl }}' == 'https://ddev.com/install.sh' ]]; then
+          SCRIPT_URL="https://raw.githubusercontent.com/ddev/ddev/main/scripts/install_ddev_head.sh"
+          echo "Using head version install script: ${SCRIPT_URL}"
+        else
+          SCRIPT_URL="${{ inputs.installScriptUrl }}"
+        fi
+        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused -o /tmp/install_ddev.sh "${SCRIPT_URL}"
 
     - name: Install DDEV
       shell: bash
       run: |
-        if [[ '${{ inputs.version }}' != 'latest' ]]; then
+        if [[ '${{ inputs.version }}' == 'latest' ]]; then
+          VERSION_ARG=""
+          echo "Installing latest stable DDEV version"
+        elif [[ '${{ inputs.version }}' == 'head' ]]; then
+          VERSION_ARG=""
+          echo "Installing DDEV HEAD version"
+        else
           VERSION_ARG="v${{ inputs.version }}"
           echo "Installing DDEV version: ${VERSION_ARG}"
-        else
-          VERSION_ARG=""
-          echo "Installing latest DDEV version"
         fi
         
         # Make installation script executable
