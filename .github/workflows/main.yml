@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       debug_enabled:
-        description: 'Run the build with tmate set "debug_enabled"'
+        description: Enable remote debugging session
         type: boolean
         required: false
         default: false
@@ -34,9 +34,9 @@ jobs:
           autostart: false
           version: ${{ matrix.version }}
 
-      - name: Setup tmate session
+      - name: Setup upterm session
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
-        uses: mxschmitt/action-tmate@v3
+        uses: owenthereal/action-upterm@v1
         with:
           limit-access-to-actor: true
 
