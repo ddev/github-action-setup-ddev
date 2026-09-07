@@ -18,6 +18,11 @@ inputs:
     required: false
     default: 'latest'
 
+  sshAgent:
+    description: 'Keep the ddev-ssh-agent container. Set to true if you need SSH inside DDEV containers (e.g. for ddev auth ssh).'
+    required: false
+    default: 'false'
+
   installScriptUrl:
     description: 'URL to the DDEV installation script'
     required: true
@@ -55,7 +60,11 @@ runs:
         chmod +x /tmp/install_ddev.sh
         
         /tmp/install_ddev.sh ${VERSION_ARG}
-        ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+        if [[ '${{ inputs.sshAgent }}' == 'true' ]]; then
+          ddev config global --instrumentation-opt-in=false
+        else
+          ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+        fi
 
     - name: Start DDEV project
       shell: bash

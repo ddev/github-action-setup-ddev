@@ -87,6 +87,18 @@ default: `latest`
           version: 1.24.8
 ```
 
+### sshAgent
+
+Keep the `ddev-ssh-agent` container running. Enable this if you need SSH inside DDEV containers, e.g. for `ddev auth ssh`.
+
+default: `false`
+
+```yaml
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          sshAgent: true
+```
+
 ### installScriptUrl
 
 URL to the DDEV installation script. This allows you to specify a custom or alternative source for the DDEV installation script.
@@ -135,6 +147,8 @@ we recommend adding SSH keys that you have entered as [GitHub "secrets"](https:/
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
 ```
+
+If you need to use `ddev auth ssh`, enable the [`sshAgent`](#sshagent) option to keep the `ddev-ssh-agent` container available.
 
 ## Contact
 
