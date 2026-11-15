@@ -23,6 +23,16 @@ inputs:
     required: true
     default: 'https://ddev.com/install.sh'
 
+  cacheDependencies:
+    description: 'Cache Composer, npm and Yarn downloads between workflow runs, keyed on the lock files.'
+    required: false
+    default: 'false'
+
+outputs:
+  cache-hit:
+    description: 'Whether cacheDependencies restored an exact match for the lock files.'
+    value: ${{ steps.cache.outputs.cache-hit }}
+
 runs:
   using: 'composite'
   steps:
@@ -56,6 +66,30 @@ runs:
         
         /tmp/install_ddev.sh ${VERSION_ARG}
         ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+
+    # DDEV's own caches live in a Docker volume that actions/cache can't reach,
+    # so point the package managers at a directory inside the project instead.
+    - name: Point package caches at the project
+      if: inputs.cacheDependencies == 'true'
+      shell: bash
+      working-directory: ${{ inputs.ddevDir }}
+      run: |
+        mkdir -p .ddev/.setup-ddev-cache
+        cat > .ddev/config.zz-setup-ddev-cache.yaml <<'EOF'
+        web_environment:
+          - COMPOSER_CACHE_DIR=/var/www/html/.ddev/.setup-ddev-cache/composer
+          - npm_config_cache=/var/www/html/.ddev/.setup-ddev-cache/npm
+          - YARN_CACHE_FOLDER=/var/www/html/.ddev/.setup-ddev-cache/yarn
+        EOF
+
+    - name: Cache dependencies
+      id: cache
+      if: inputs.cacheDependencies == 'true'
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ inputs.ddevDir }}/.ddev/.setup-ddev-cache
+        key: setup-ddev-deps-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(format('{0}/composer.lock', inputs.ddevDir), format('{0}/package-lock.json', inputs.ddevDir), format('{0}/yarn.lock', inputs.ddevDir)) }}
+        restore-keys: setup-ddev-deps-${{ runner.os }}-${{ runner.arch }}-
 
     - name: Start DDEV project
       shell: bash

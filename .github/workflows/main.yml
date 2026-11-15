@@ -76,3 +76,44 @@ jobs:
 
       - name: "index.html: expected output"
         run: test 'index.html test output' = "$(curl --silent https://setup-ddev-proj1.test)"
+
+  cache-save:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: ./
+        with:
+          ddevDir: tests/fixtures/ddevProj2
+          cacheDependencies: true
+
+      - name: Install dependencies to fill the cache
+        working-directory: tests/fixtures/ddevProj2
+        run: |
+          ddev composer install
+          ddev npm ci
+
+  cache-restore:
+    needs: cache-save
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: ./
+        id: ddev
+        with:
+          ddevDir: tests/fixtures/ddevProj2
+          cacheDependencies: true
+
+      - name: Cache restored
+        env:
+          CACHE_HIT: ${{ steps.ddev.outputs.cache-hit }}
+        run: test "$CACHE_HIT" = 'true'
+
+      - name: Install dependencies without network access
+        working-directory: tests/fixtures/ddevProj2
+        run: |
+          ddev exec 'COMPOSER_DISABLE_NETWORK=1 composer install'
+          ddev npm ci --offline

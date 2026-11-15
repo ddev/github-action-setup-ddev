@@ -115,6 +115,22 @@ Example with custom script source:
           version: "v1.24.8"
 ```
 
+### cacheDependencies
+
+Caches Composer, npm and Yarn downloads between workflow runs with [`actions/cache`](https://github.com/actions/cache), keyed on `composer.lock`, `package-lock.json` and `yarn.lock`. The caches are stored in `.ddev/.setup-ddev-cache` in the project, and a generated `.ddev/config.zz-setup-ddev-cache.yaml` points the package managers at them. The `cache-hit` output is `true` when the lock files matched a saved cache exactly.
+
+default: `false`
+
+```yaml
+      - uses: ddev/github-action-setup-ddev@v1
+        with:
+          cacheDependencies: true
+      - run: ddev composer install
+      - run: ddev npm ci
+```
+
+Pull requests can only restore caches saved on their own branch or the default branch, so run the workflow on pushes to the default branch too. Caching DDEV's Docker images doesn't help: restoring them takes longer than pulling them ([#15](https://github.com/ddev/github-action-setup-ddev/issues/15)).
+
 ## Common recipes
 
 ### SSH keys

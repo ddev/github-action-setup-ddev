@@ -1,0 +1,7 @@
+{
+    "name": "ddev/setup-ddev-cache-test",
+    "type": "project",
+    "require": {
+        "psr/log": "3.0.2"
+    }
+}

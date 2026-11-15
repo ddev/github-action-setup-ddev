@@ -1,0 +1,4 @@
+name: setup-ddev-proj2
+type: php
+docroot: ""
+omit_containers: [db]
