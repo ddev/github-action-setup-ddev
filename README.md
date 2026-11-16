@@ -119,16 +119,16 @@ Example with custom script source:
 
 ### Caching dependencies
 
-GitHub runners start empty, so DDEV downloads every Composer and npm or Yarn
-package on each run. Point the package managers' caches at directories in the
-project and cache those with [`actions/cache`](https://github.com/actions/cache):
+GitHub runners start empty, so DDEV downloads every Composer, npm and Yarn
+package on each run. [davereid/github-action-cache-ddev](https://github.com/davereid/github-action-cache-ddev)
+caches the package caches DDEV already keeps between runs. Run it before the
+project starts:
 
 ```yaml
 on:
   pull_request:
   push:
     # Pull requests can only restore caches saved on their own branch or the default branch.
-    # https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching#restrictions-for-accessing-a-cache
     branches: [main]
 
 jobs:
@@ -136,34 +136,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/cache@v4
-        with:
-          path: .composer-cache
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-      - uses: actions/cache@v4
-        with:
-          path: .npm-cache
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: ${{ runner.os }}-npm-
-      - name: Point the package caches at the cached directories
-        run: |
-          cat > .ddev/config.ci.yaml <<'EOF'
-          web_environment:
-            - COMPOSER_CACHE_DIR=/var/www/html/.composer-cache
-            - npm_config_cache=/var/www/html/.npm-cache
-          EOF
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
+      - uses: davereid/github-action-cache-ddev@v1
+      - run: ddev start
       - run: ddev composer install
-      - run: ddev npm ci
 ```
-
-For Yarn, cache `.yarn-cache` keyed on `yarn.lock`, and set
-`YARN_CACHE_FOLDER=/var/www/html/.yarn-cache` instead of `npm_config_cache`.
-
-Add the cache directories to `.gitignore`. The paths are absolute, so the
-caches are found wherever in the project a command runs.
 
 Caching DDEV's Docker images doesn't help: restoring them takes longer than
 pulling them ([#15](https://github.com/ddev/github-action-setup-ddev/issues/15)).
