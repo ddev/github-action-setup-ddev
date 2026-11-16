@@ -117,6 +117,37 @@ Example with custom script source:
 
 ## Common recipes
 
+### Caching dependencies
+
+GitHub runners start empty, so DDEV downloads every Composer, npm and Yarn
+package on each run. [davereid/github-action-cache-ddev](https://github.com/davereid/github-action-cache-ddev)
+caches the package caches DDEV already keeps between runs. Run it before the
+project starts:
+
+```yaml
+on:
+  pull_request:
+  push:
+    # Pull requests can only restore caches saved on their own branch or the default branch.
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@v1
+        with:
+          autostart: false
+      - uses: davereid/github-action-cache-ddev@v1
+      - run: ddev start
+      - run: ddev composer install
+```
+
+Caching DDEV's Docker images doesn't help: restoring them takes longer than
+pulling them ([#15](https://github.com/ddev/github-action-setup-ddev/issues/15)).
+
 ### SSH keys
 
 If your workflow needs to reach remote destinations that require private SSH keys,
