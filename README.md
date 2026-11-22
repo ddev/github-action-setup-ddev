@@ -77,7 +77,7 @@ default: `true`
 
 ### version
 
-Install a specific ddev version. The version must be available in ddev's apt repository.
+Install a specific ddev version, such as `1.24.8`, the latest stable release with `latest`, or the latest build of ddev's `main` branch with `head`.
 
 default: `latest`
 
@@ -86,6 +86,14 @@ default: `latest`
         with:
           version: 1.24.8
 ```
+
+`head` installs the latest stable release first, then replaces it with the `main` build using `ddev utility download-ddev --head`.
+
+### token
+
+GitHub token used to download the `head` build. With a token, the build comes from GitHub directly rather than through [nightly.link](https://nightly.link). The workflow's own token works, so you don't need to set this.
+
+default: `${{ github.token }}`
 
 ### installScriptUrl
 

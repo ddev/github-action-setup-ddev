@@ -23,38 +23,63 @@ inputs:
     required: true
     default: 'https://ddev.com/install.sh'
 
+  token:
+    description: 'GitHub token used to download the DDEV HEAD build (version: head) directly from GitHub instead of through nightly.link'
+    required: false
+    default: ${{ github.token }}
+
 runs:
   using: 'composite'
   steps:
     - name: Download DDEV install script
       shell: bash
+      env:
+        INSTALL_SCRIPT_URL: ${{ inputs.installScriptUrl }}
       run: |
-        if [[ '${{ inputs.version }}' == 'head' && '${{ inputs.installScriptUrl }}' == 'https://ddev.com/install.sh' ]]; then
-          SCRIPT_URL="https://raw.githubusercontent.com/ddev/ddev/main/scripts/install_ddev_head.sh"
-          echo "Using head version install script: ${SCRIPT_URL}"
-        else
-          SCRIPT_URL="${{ inputs.installScriptUrl }}"
-        fi
-        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused -o /tmp/install_ddev.sh "${SCRIPT_URL}"
+        curl -fsSL --retry 3 --retry-max-time 60 --retry-connrefused -o /tmp/install_ddev.sh "${INSTALL_SCRIPT_URL}"
 
     - name: Install DDEV
       shell: bash
+      env:
+        DDEV_VERSION: ${{ inputs.version }}
       run: |
-        if [[ '${{ inputs.version }}' == 'latest' ]]; then
+        if [[ "${DDEV_VERSION}" == 'latest' ]]; then
           VERSION_ARG=""
           echo "Installing latest stable DDEV version"
-        elif [[ '${{ inputs.version }}' == 'head' ]]; then
+        elif [[ "${DDEV_VERSION}" == 'head' ]]; then
+          # HEAD is installed by replacing the stable binaries in the next step
           VERSION_ARG=""
-          echo "Installing DDEV HEAD version"
+          echo "Installing latest stable DDEV version, to be replaced with the HEAD build"
         else
-          VERSION_ARG="v${{ inputs.version }}"
+          VERSION_ARG="v${DDEV_VERSION}"
           echo "Installing DDEV version: ${VERSION_ARG}"
         fi
-        
+
         # Make installation script executable
         chmod +x /tmp/install_ddev.sh
-        
+
         /tmp/install_ddev.sh ${VERSION_ARG}
+
+    - name: Replace DDEV with the HEAD build
+      shell: bash
+      if: inputs.version == 'head'
+      env:
+        # With a token, download-ddev gets the build from GitHub directly,
+        # and uses nightly.link only if that fails
+        DDEV_GITHUB_TOKEN: ${{ inputs.token }}
+      run: |
+        head_dir="${RUNNER_TEMP}/ddev-head"
+        ddev utility download-ddev --head --output "${head_dir}"
+        # Overwrite the stable binaries in place, so ddev and ddev-hostname stay
+        # a matching pair wherever they are called from
+        ddev_dir="$(dirname "$(command -v ddev)")"
+        sudo install -m 0755 "${head_dir}/ddev" "${head_dir}/ddev-hostname" "${ddev_dir}/"
+        rm -rf "${head_dir}"
+        ddev --version
+
+    - name: Configure DDEV
+      shell: bash
+      run: |
         ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
 
     - name: Start DDEV project
