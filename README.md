@@ -87,13 +87,7 @@ default: `latest`
           version: 1.24.8
 ```
 
-`head` installs the latest stable release first, then replaces it with the `main` build using `ddev utility download-ddev --head`.
-
-### token
-
-GitHub token used to download the `head` build. With a token, the build comes from GitHub directly rather than through [nightly.link](https://nightly.link). The workflow's own token works, so you don't need to set this.
-
-default: `${{ github.token }}`
+`head` installs the latest stable release first, then replaces it with the `main` build using `ddev utility download-ddev --head`. The action passes the workflow's own token, so the build comes from GitHub directly rather than through [nightly.link](https://nightly.link).
 
 ### installScriptUrl
 

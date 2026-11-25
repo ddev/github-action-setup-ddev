@@ -14,7 +14,7 @@ inputs:
     default: 'true'
 
   version:
-    description: 'Install a specific DDEV version. Example: 1.24.0'
+    description: 'DDEV version to install: latest (the default), head (the latest build of the main branch), or a release number such as 1.24.8'
     required: false
     default: 'latest'
 
@@ -22,11 +22,6 @@ inputs:
     description: 'URL to the DDEV installation script'
     required: true
     default: 'https://ddev.com/install.sh'
-
-  token:
-    description: 'GitHub token used to download the DDEV HEAD build (version: head) directly from GitHub instead of through nightly.link'
-    required: false
-    default: ${{ github.token }}
 
 runs:
   using: 'composite'
@@ -66,7 +61,7 @@ runs:
       env:
         # With a token, download-ddev gets the build from GitHub directly,
         # and uses nightly.link only if that fails
-        DDEV_GITHUB_TOKEN: ${{ inputs.token }}
+        DDEV_GITHUB_TOKEN: ${{ github.token }}
       run: |
         head_dir="${RUNNER_TEMP}/ddev-head"
         ddev utility download-ddev --head --output "${head_dir}"
