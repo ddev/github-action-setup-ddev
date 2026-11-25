@@ -45,6 +45,9 @@ jobs:
           ddev --version
           if [[ ${{ matrix.version }} == '1.24.8' ]]; then
             test "$(ddev --version)" == 'ddev version v1.24.8'
+          elif [[ ${{ matrix.version }} == 'head' ]]; then
+            # A build of main has a -g<sha> suffix, which the stable release lacks
+            [[ "$(ddev --version)" =~ -g[0-9a-f]+$ ]]
           else
             test "$(ddev --version)" != 'ddev version v1.24.8'
           fi
